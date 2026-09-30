@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Panel de conversaciones WhatsApp - MAS Power"
+    >
+
+    <title>
+        MAS Power - Conversaciones
+    </title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="interfaz.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     CONTENEDOR PRINCIPAL
+========================================================= -->
+
+<div class="app-chat">
+
+
+    <!-- =====================================================
+         COLUMNA IZQUIERDA
+         CONVERSACIONES
+    ====================================================== -->
+
+    <aside class="panel-conversaciones">
+
+
+        <!-- =================================================
+             ENCABEZADO
+        ================================================== -->
+
+        <div class="panel-header">
+
+            <div>
+
+                <h1>
+                    Mensajes
+                </h1>
+
+                <p>
+                    Conversaciones de WhatsApp
+                </p>
+
+            </div>
+
+
+            <div class="panel-header-acciones">
+
+
+                <!-- MENSAJE MASIVO -->
+
+                <button
+                    id="btnMensajeMasivo"
+                    class="btn-icono btn-masivo"
+                    type="button"
+                    title="Enviar mensaje masivo"
+                >
+
+                    <i class="fa-solid fa-bullhorn"></i>
+
+                </button>
+
+
+                <!-- ACTUALIZAR -->
+
+                <button
+                    id="btnActualizarConversaciones"
+                    class="btn-icono"
+                    type="button"
+                    title="Actualizar conversaciones"
+                >
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BUSCADOR
+        ================================================== -->
+
+        <div class="buscador-conversaciones">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                id="buscarConversacion"
+                type="search"
+                placeholder="Buscar por nombre o número"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             FILTROS
+        ================================================== -->
+
+        <div class="filtros-conversaciones">
+
+            <button
+                class="filtro-conversacion activo"
+                type="button"
+                data-filtro="todas"
+            >
+                Todas
+            </button>
+
+            <button
+                class="filtro-conversacion"
+                type="button"
+                data-filtro="noLeidas"
+            >
+                No leídas
+            </button>
+
+            <button
+                class="filtro-conversacion"
+                type="button"
+                data-filtro="bot"
+            >
+                Bot
+            </button>
+
+            <button
+                class="filtro-conversacion"
+                type="button"
+                data-filtro="humano"
+            >
+                Humano
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             ESTADO DE CARGA
+        ================================================== -->
+
+        <div
+            id="estadoConversaciones"
+            class="estado-panel"
+        >
+
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+
+            <span>
+                Cargando conversaciones...
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             LISTA DE CONVERSACIONES
+        ================================================== -->
+
+        <div
+            id="listaConversaciones"
+            class="lista-conversaciones"
+        >
+        </div>
+
+
+    </aside>
+
+
+    <!-- =====================================================
+         COLUMNA CENTRAL
+         CHAT
+    ====================================================== -->
+
+    <main class="panel-chat">
+
+
+        <!-- =================================================
+             CHAT VACÍO
+        ================================================== -->
+
+        <section
+            id="chatVacio"
+            class="chat-vacio"
+        >
+
+            <div class="chat-vacio-contenido">
+
+                <div class="chat-vacio-icono">
+
+                    <i class="fa-brands fa-whatsapp"></i>
+
+                </div>
+
+                <h2>
+                    Selecciona una conversación
+                </h2>
+
+                <p>
+                    Aquí aparecerán los mensajes reales recibidos
+                    y enviados por WhatsApp.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CHAT ACTIVO
+        ================================================== -->
+
+        <section
+            id="chatActivo"
+            class="chat-activo oculto"
+        >
+
+
+            <!-- =================================================
+                 CABECERA
+            ================================================== -->
+
+            <header class="chat-header">
+
+
+                <div class="chat-contacto">
+
+
+                    <div
+                        id="chatAvatar"
+                        class="chat-avatar"
+                    >
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+
+                    <div class="chat-contacto-datos">
+
+                        <h2 id="chatNombre">
+                            —
+                        </h2>
+
+                        <span id="chatTelefono">
+                            —
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     CONTROLES
+                ================================================== -->
+
+                <div class="chat-controles">
+
+
+                    <button
+                        id="btnActivarBot"
+                        class="btn-control btn-bot"
+                        type="button"
+                        title="Activar chatbot"
+                    >
+
+                        <i class="fa-solid fa-robot"></i>
+
+                        <span>
+                            Bot
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="btnAtencionHumana"
+                        class="btn-control btn-humano"
+                        type="button"
+                        title="Pasar a atención humana"
+                    >
+
+                        <i class="fa-solid fa-headset"></i>
+
+                        <span>
+                            Humano
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="btnCerrarConversacion"
+                        class="btn-control btn-cerrar"
+                        type="button"
+                        title="Cerrar conversación"
+                    >
+
+                        <i class="fa-solid fa-circle-xmark"></i>
+
+                    </button>
+
+
+                </div>
+
+
+            </header>
+
+
+            <!-- =================================================
+                 ESTADO DEL CHAT
+            ================================================== -->
+
+            <div class="chat-estado-barra">
+
+
+                <div>
+
+                    <span>
+                        Atención:
+                    </span>
+
+                    <strong id="estadoAtencionActual">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Conversación:
+                    </span>
+
+                    <strong id="estadoConversacionActual">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 MENSAJES
+            ================================================== -->
+
+            <div
+                id="contenedorMensajes"
+                class="contenedor-mensajes"
+            >
+            </div>
+
+
+            <!-- =================================================
+                 ESTADO DE MENSAJES
+            ================================================== -->
+
+            <div
+                id="estadoMensajes"
+                class="estado-mensajes oculto"
+            >
+
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+
+                <span>
+                    Cargando mensajes...
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 PREVISUALIZACIÓN DE ARCHIVO
+            ================================================== -->
+
+            <div
+                id="previewAdjunto"
+                class="preview-adjunto oculto"
+            >
+
+                <div
+                    id="previewAdjuntoContenido"
+                    class="preview-adjunto-contenido"
+                >
+                </div>
+
+
+                <button
+                    id="btnQuitarAdjunto"
+                    class="btn-quitar-adjunto"
+                    type="button"
+                    title="Quitar archivo"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 COMPOSITOR
+            ================================================== -->
+
+            <footer class="composer">
+
+
+                <!-- CÁMARA -->
+
+                <button
+                    id="btnCamara"
+                    class="composer-icono"
+                    type="button"
+                    title="Tomar foto"
+                >
+
+                    <i class="fa-solid fa-camera"></i>
+
+                </button>
+
+
+                <!-- IMAGEN -->
+
+                <button
+                    id="btnImagen"
+                    class="composer-icono"
+                    type="button"
+                    title="Enviar imagen"
+                >
+
+                    <i class="fa-regular fa-image"></i>
+
+                </button>
+
+
+                <!-- ARCHIVO -->
+
+                <button
+                    id="btnArchivo"
+                    class="composer-icono"
+                    type="button"
+                    title="Adjuntar archivo"
+                >
+
+                    <i class="fa-solid fa-paperclip"></i>
+
+                </button>
+
+
+                <!-- INPUT CÁMARA -->
+
+                <input
+                    id="inputCamara"
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    hidden
+                >
+
+
+                <!-- INPUT IMAGEN -->
+
+                <input
+                    id="inputImagen"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                >
+
+
+                <!-- INPUT ARCHIVO -->
+
+                <input
+                    id="inputArchivo"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
+                    hidden
+                >
+
+
+                <!-- MENSAJE -->
+
+                <textarea
+                    id="mensajeManual"
+                    rows="1"
+                    placeholder="Escribe un mensaje"
+                    maxlength="4000"
+                ></textarea>
+
+
+                <!-- ENVIAR -->
+
+                <button
+                    id="btnEnviarMensaje"
+                    class="btn-enviar"
+                    type="button"
+                    title="Enviar mensaje"
+                >
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                </button>
+
+
+            </footer>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         COLUMNA DERECHA
+         PROSPECTO
+    ====================================================== -->
+
+    <aside
+        id="panelProspecto"
+        class="panel-prospecto"
+    >
+
+
+        <div class="prospecto-header">
+
+            <div>
+
+                <h2>
+                    Prospecto
+                </h2>
+
+                <p>
+                    Información obtenida durante la conversación
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SIN CONVERSACIÓN
+        ================================================== -->
+
+        <div
+            id="prospectoVacio"
+            class="prospecto-vacio"
+        >
+
+            <i class="fa-regular fa-address-card"></i>
+
+            <p>
+                Selecciona una conversación para visualizar
+                sus datos.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             DATOS
+        ================================================== -->
+
+        <div
+            id="prospectoDatos"
+            class="prospecto-datos oculto"
+        >
+
+
+            <!-- IDENTIFICACIÓN -->
+
+            <div class="prospecto-bloque">
+
+                <h3>
+                    Identificación
+                </h3>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        Nombre
+                    </span>
+
+                    <strong id="prospectNombre">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        WhatsApp
+                    </span>
+
+                    <strong id="prospectTelefono">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DATOS DINÁMICOS
+            ================================================== -->
+
+            <div class="prospecto-bloque">
+
+                <h3>
+                    Datos recopilados
+                </h3>
+
+
+                <div
+                    id="contenedorDatosDinamicos"
+                    class="datos-dinamicos"
+                >
+                </div>
+
+
+                <div
+                    id="estadoDatosDinamicosVacio"
+                    class="datos-dinamicos-vacio"
+                >
+
+                    <i class="fa-regular fa-folder-open"></i>
+
+                    <span>
+                        Aún no se han recopilado datos.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SEGUIMIENTO
+            ================================================== -->
+
+            <div class="prospecto-bloque">
+
+                <h3>
+                    Seguimiento
+                </h3>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        Estado del flujo
+                    </span>
+
+                    <strong id="prospectEstadoFlujo">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        Atención
+                    </span>
+
+                    <strong id="prospectEstadoAtencion">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        Estado
+                    </span>
+
+                    <strong id="prospectEstadoConversacion">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="dato-prospecto">
+
+                    <span class="dato-label">
+                        Último contacto
+                    </span>
+
+                    <strong id="prospectUltimoContacto">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </aside>
+
+
+</div>
+
+
+<!-- =========================================================
+     MODAL MENSAJE MASIVO
+========================================================= -->
+
+<div
+    id="modalMensajeMasivo"
+    class="modal oculto"
+>
+
+
+    <div class="modal-overlay"></div>
+
+
+    <div class="modal-contenido modal-masivo">
+
+
+        <div class="modal-icono">
+
+            <i class="fa-solid fa-bullhorn"></i>
+
+        </div>
+
+
+        <h3>
+            Mensaje masivo
+        </h3>
+
+
+        <p>
+            Envía un mensaje a varios contactos.
+        </p>
+
+
+        <!-- =================================================
+             DESTINATARIOS
+        ================================================== -->
+
+        <div class="campo-modal">
+
+            <label for="selectorDestinatariosMasivo">
+                Destinatarios
+            </label>
+
+
+            <select id="selectorDestinatariosMasivo">
+
+                <option value="todos">
+                    Todos los contactos
+                </option>
+
+                <option value="bot">
+                    Conversaciones en Bot
+                </option>
+
+                <option value="humano">
+                    Conversaciones en atención humana
+                </option>
+
+                <option value="seleccionar">
+                    Seleccionar contactos
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- =================================================
+             SELECCIÓN MANUAL
+        ================================================== -->
+
+        <div
+            id="contenedorSeleccionContactos"
+            class="seleccion-contactos oculto"
+        >
+
+            <div class="buscador-contactos-masivo">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    id="buscarContactoMasivo"
+                    type="search"
+                    placeholder="Buscar contacto"
+                >
+
+            </div>
+
+
+            <div
+                id="listaContactosMasivo"
+                class="lista-contactos-masivo"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MENSAJE
+        ================================================== -->
+
+        <div class="campo-modal">
+
+            <label for="textoMensajeMasivo">
+                Mensaje
+            </label>
+
+
+            <textarea
+                id="textoMensajeMasivo"
+                rows="5"
+                maxlength="4000"
+                placeholder="Escribe el mensaje que deseas enviar..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- =================================================
+             CONTADOR
+        ================================================== -->
+
+        <div class="resumen-masivo">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Destinatarios:
+                <strong id="cantidadDestinatariosMasivo">
+                    0
+                </strong>
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             ACCIONES
+        ================================================== -->
+
+        <div class="modal-acciones">
+
+
+            <button
+                id="btnCancelarMasivo"
+                class="btn-modal secundario"
+                type="button"
+            >
+                Cancelar
+            </button>
+
+
+            <button
+                id="btnEnviarMasivo"
+                class="btn-modal principal"
+                type="button"
+            >
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                Enviar
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     NOTIFICACIONES
+========================================================= -->
+
+<div
+    id="notificacion"
+    class="notificacion oculto"
+    role="status"
+    aria-live="polite"
+>
+
+    <i id="notificacionIcono"></i>
+
+    <span id="notificacionTexto"></span>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL CONFIRMACIÓN
+========================================================= -->
+
+<div
+    id="modalConfirmacion"
+    class="modal oculto"
+>
+
+
+    <div class="modal-overlay"></div>
+
+
+    <div class="modal-contenido">
+
+
+        <div class="modal-icono">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+        </div>
+
+
+        <h3 id="modalTitulo">
+            Confirmar acción
+        </h3>
+
+
+        <p id="modalMensaje">
+            ¿Deseas continuar?
+        </p>
+
+
+        <div class="modal-acciones">
+
+
+            <button
+                id="btnCancelarModal"
+                class="btn-modal secundario"
+                type="button"
+            >
+                Cancelar
+            </button>
+
+
+            <button
+                id="btnConfirmarModal"
+                class="btn-modal principal"
+                type="button"
+            >
+                Confirmar
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script
+    type="module"
+    src="interfaz.js"
+></script>
+
+
+</body>
+
+</html>
